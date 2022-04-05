@@ -17,14 +17,12 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v2
         with:
-          #repository: $GITHUB_REPOSITORY
           path: ${{ inputs.reponame }}
           fetch-depth: 0
-      - uses: ./.github/workflows/template-workflow.yaml
-        with:
-          username: ${{ inputs.reponame }}
-          token: ${{ secrets.aws_id }}
+          
       - name: Set Repo Envs
+        env:
+         token: ${{ secrets.aws_id }}
         run: |
           REPO_NAME=${{ inputs.reponame }}
           echo "git_repo_name=${REPO_NAME}" | tee -a $GITHUB_ENV
