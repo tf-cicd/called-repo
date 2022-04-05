@@ -1,15 +1,14 @@
 on:
   workflow_call:
     inputs:
-      aws_id:
-        required: true
-        type: string
-      aws_access_key:
-        required: true
-        type: string
       reponame:
         required: true
         type: string
+    secrets:
+      aws_id:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
 
 jobs:
   reusable_workflow_job:
@@ -21,47 +20,3 @@ jobs:
           echo "git_repo_name=${REPO_NAME}" | tee -a $GITHUB_ENV
           echo "docker_repo_name=${REPO_NAME}" | tee -a $GITHUB_ENV
           echo "aws_id=${{ inputs.aws_id }}" | tee -a $GITHUB_ENV
-      # - name: Checkout the repo
-      #   uses: actions/checkout@v2
-      #   with:
-      #     #repository: $GITHUB_REPOSITORY
-      #     path: ${{ env.git_repo_name }}
-      #     fetch-depth: 0
-
-      # - name: Install GitVersion
-      #   uses: gittools/actions/gitversion/setup@v0.9.9
-      #   with:
-      #     versionSpec: '5.6.7'
-
-      # - name: Determine Version
-      #   id: gitversion
-      #   uses: gittools/actions/gitversion/execute@v0.9.9
-      #   with:
-      #     targetPath: ${{ env.git_repo_name }}
-
-      # - name: set version
-      #   run: |
-      #     GITVERSION=${{ steps.gitversion.outputs.fullSemVer }}
-      #     echo "gitversion=${GITVERSION}" | tee -a $GITHUB_ENV
-               
-      # - name: Configure AWS credentials
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-access-key-id: ${{ inputs.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: us-east-1
-
-      # - name: Login to Amazon ECR
-      #   id: login-ecr
-      #   uses: aws-actions/amazon-ecr-login@v1
-
-      # - name: aws sts
-      #   env:
-      #     REGISTRY: 737852819915.dkr.ecr.us-east-1.amazonaws.com
-      #     PROJECT: talentfabric
-      #     REPO: ${{ env.docker_repo_name }}
-      #     TAG: ${{ env.gitversion }}
-      #     DOCKER_FILE: ${{ env.git_repo_name }}/Dockerfile
-      #     BUILD_CONTEXT: ${{ env.git_repo_name }}
-      #   run: |
-      #     aws sts get-caller-identity
