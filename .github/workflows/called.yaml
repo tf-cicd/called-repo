@@ -14,6 +14,10 @@ jobs:
   reusable_workflow_job:
     runs-on: ubuntu-latest
     steps:
+      - uses: ./.github/workflows/my-action
+        with:
+          username: ${{ inputs.reponame }}
+          token: ${{ secrets.aws_id }}
       - name: Set Repo Envs
         run: |
           REPO_NAME=${{ inputs.reponame }}
