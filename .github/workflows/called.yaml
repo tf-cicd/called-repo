@@ -26,3 +26,17 @@ jobs:
           aws-access-key-id: ${{ secrets.aws_id }}
           aws-secret-access-key: ${{ secrets.aws_access_key }}
           aws-region: us-east-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: aws sts
+        env:
+          REGISTRY: 737852819915.dkr.ecr.us-east-1.amazonaws.com
+          PROJECT: talentfabric
+          REPO: ${{ inputs.reponame }}
+          # TAG: ${{ env.gitversion }}
+          DOCKER_FILE: ${{ inputs.reponame }}/Dockerfile
+          BUILD_CONTEXT: ${{ inputs.reponame }}
+        run: |
+          aws sts get-caller-identity
