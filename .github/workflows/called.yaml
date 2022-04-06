@@ -1,42 +1,24 @@
-on:
-  workflow_call:
-    inputs:
-      reponame:
-        required: true
-        type: string
-    secrets:
-      aws_id:
-        required: true
-      aws_access_key:
-        required: true
+on: ["workflow_call"]
 
 jobs:
   reusable_workflow_job:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v2
-        with:
-          path: ${{ inputs.reponame }}
-          fetch-depth: 0
+      - name: print env
+        run: |
+          env
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.aws_id }}
-          aws-secret-access-key: ${{ secrets.aws_access_key }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: aws sts
-        env:
-          REGISTRY: 737852819915.dkr.ecr.us-east-1.amazonaws.com
-          PROJECT: talentfabric
-          REPO: ${{ inputs.reponame }}
-          # TAG: ${{ env.gitversion }}
-          DOCKER_FILE: ${{ inputs.reponame }}/Dockerfile
-          BUILD_CONTEXT: ${{ inputs.reponame }}
         run: |
           aws sts get-caller-identity
